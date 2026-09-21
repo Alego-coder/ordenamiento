@@ -10,6 +10,8 @@ typedef struct {
     int dificultad;
     int *prerequisitos;
     int num_prerequisitos;
+    int indice;   // posicion en el arreglo original (lo llena calcular_niveles)
+    int nivel;    // nivel de prerrequisitos (lo llena calcular_niveles)
 } Curso;
 
 void crear_curso(Curso *curso, const char *nombre, int creditos,

@@ -16,7 +16,11 @@ void imprimir_cursos(Curso *cursos, int n, const char *titulo, Curso *original) 
             printf("   Prerequisitos: ");
             for (int j = 0; j < cursos[i].num_prerequisitos; j++) {
                 int curso_index = cursos[i].prerequisitos[j];
-                printf("%s ", original[curso_index].nombre);
+                if (curso_index < 0 || curso_index >= n) {
+                    printf("(indice %d invalido) ", curso_index);
+                } else {
+                    printf("%s ", original[curso_index].nombre);
+                }
             }
             printf("\n");
         }
@@ -33,6 +37,8 @@ void crear_curso(Curso *curso, const char *nombre, int creditos,
     curso->semestre = semestre;
     curso->dificultad = dificultad;
     curso->num_prerequisitos = num_prerequisitos;
+    curso->indice = 0;
+    curso->nivel = 0;
 
     if (num_prerequisitos > 0) {
         curso->prerequisitos = (int *)malloc(num_prerequisitos * sizeof(int));
@@ -57,6 +63,8 @@ Curso* copiar_arreglo_cursos(Curso *original, int n) {
                     original[i].creditos, original[i].semestre,
                     original[i].dificultad,
                     original[i].prerequisitos, original[i].num_prerequisitos);
+        copia[i].indice = original[i].indice;
+        copia[i].nivel = original[i].nivel;
     }
     return copia;
 }

@@ -1,4 +1,10 @@
 #include "quicksort.h"
+#include "restricciones.h"
+#include "semestre_sugerido.h"
+
+// Topes usados para el plan de semestre sugerido
+#define MAX_CREDITOS_SEMESTRE 42
+#define MAX_DIFICULTAD_SEMESTRE 38
 
 // Comparar por dificultad
 int comparar_dificultad(const void *a, const void *b) {
@@ -6,7 +12,6 @@ int comparar_dificultad(const void *a, const void *b) {
     Curso *c2 = (Curso *)b;
     return c1->dificultad - c2->dificultad;
 }
-
 // Comparar por semestre
 int comparar_semestre(const void *a, const void *b) {
     Curso *c1 = (Curso *)a;
@@ -120,6 +125,24 @@ int main(int argc, char *argv[]) {
     quicksort(copia_qs_nombre, n, comparar_nombre);
     imprimir_cursos(copia_qs_nombre, n, "Ordenado con Quicksort (por Nombre)", cursos);
     liberar_arreglo_cursos(copia_qs_nombre, n);
+
+    // Prueba Quicksort por restricciones (prerrequisitos) y semestre sugerido
+    if (calcular_niveles(cursos, n) == 0) {
+        Curso *copia_restricciones = copiar_arreglo_cursos(cursos, n);
+        quicksort(copia_restricciones, n, comparar_restricciones);
+        imprimir_cursos(copia_restricciones, n, "Ordenado con Quicksort (por Restricciones)", cursos);
+        liberar_arreglo_cursos(copia_restricciones, n);
+
+        int *plan = (int *)malloc(n * sizeof(int));
+        int semestres = semestre_sugerido(cursos, n, MAX_CREDITOS_SEMESTRE,
+                                          MAX_DIFICULTAD_SEMESTRE, plan);
+        if (semestres > 0) {
+            imprimir_plan(cursos, n, plan, semestres);
+        }
+        free(plan);
+    } else {
+        printf("\nHay un ciclo en los prerrequisitos: no se puede ordenar por restricciones.\n");
+    }
 
     // Liberar memoria original
     liberar_arreglo_cursos(cursos, n);

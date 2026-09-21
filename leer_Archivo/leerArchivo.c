@@ -36,7 +36,7 @@ Curso* leer_cursos_archivo(const char *ruta_archivo, int *n_cursos) {
         if (strlen(linea) == 0) {
             continue;
         }
-
+        //declaracion de las variables curso
         char nombre[100] = "";
         int creditos = 0, semestre = 0, dificultad = 0;
         int prerequisitos[MAX_PREREQUISITOS];
@@ -45,6 +45,7 @@ Curso* leer_cursos_archivo(const char *ruta_archivo, int *n_cursos) {
         int campo = 0;
         char *token = strtok(linea, ",");
 
+        //Lee las linas que representan el curso y asigna los valores dependiendo del campo
         while (token != NULL) {
             switch (campo) {
                 case 0:
@@ -60,6 +61,7 @@ Curso* leer_cursos_archivo(const char *ruta_archivo, int *n_cursos) {
                     dificultad = atoi(token);
                     break;
                 default:
+                        //Agrega los prerequisitos  al arreglo
                     if (strlen(token) > 0 && num_prerequisitos < MAX_PREREQUISITOS) {
                         prerequisitos[num_prerequisitos++] = atoi(token);
                     }
@@ -69,14 +71,16 @@ Curso* leer_cursos_archivo(const char *ruta_archivo, int *n_cursos) {
             token = strtok(NULL, ",");
         }
 
+        //Creacion del curso
         crear_curso(&cursos[indice], nombre, creditos, semestre, dificultad,
                     num_prerequisitos > 0 ? prerequisitos : NULL,
                     num_prerequisitos);
         indice++;
     }
-
+    // Cierra el archivo cuando termina de registrar todas las lineas
     fclose(archivo);
     *n_cursos = indice;
+    //Devuelve el arreglo de cursos
     return cursos;
 }
 
