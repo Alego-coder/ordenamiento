@@ -1,10 +1,4 @@
 #include "quicksort.h"
-#include "restricciones.h"
-#include "semestre_sugerido.h"
-
-// Topes usados para el plan de semestre sugerido
-#define MAX_CREDITOS_SEMESTRE 42
-#define MAX_DIFICULTAD_SEMESTRE 38
 
 // Comparar por dificultad
 int comparar_dificultad(const void *a, const void *b) {
@@ -30,6 +24,46 @@ int comparar_creditos(const void *a, const void *b) {
 int comparar_nombre(const void *a, const void *b) {
     Curso *c1 = (Curso *)a;
     Curso *c2 = (Curso *)b;
+    return strcmp(c1->nombre, c2->nombre);
+}
+
+// Comparar por varios criterios (ver configurar_criterios en quicksort.h)
+static Criterio criterios_activos[MAX_CRITERIOS];
+static int num_criterios_activos = 0;
+
+void configurar_criterios(const Criterio *criterios, int n) {
+    if (n > MAX_CRITERIOS) {
+        n = MAX_CRITERIOS;
+    }
+    for (int i = 0; i < n; i++) {
+        criterios_activos[i] = criterios[i];
+    }
+    num_criterios_activos = n;
+}
+
+static int comparar_campo(const Curso *c1, const Curso *c2, CampoCriterio campo) {
+    switch (campo) {
+        case CRIT_CREDITOS:   return (c1->creditos > c2->creditos) - (c1->creditos < c2->creditos);
+        case CRIT_DIFICULTAD: return (c1->dificultad > c2->dificultad) - (c1->dificultad < c2->dificultad);
+        case CRIT_SEMESTRE:   return (c1->semestre > c2->semestre) - (c1->semestre < c2->semestre);
+        case CRIT_NOMBRE:     return strcmp(c1->nombre, c2->nombre);
+    }
+    return 0;
+}
+
+int comparar_compuesto(const void *a, const void *b) {
+    const Curso *c1 = (const Curso *)a;
+    const Curso *c2 = (const Curso *)b;
+
+    for (int i = 0; i < num_criterios_activos; i++) {
+        int r = comparar_campo(c1, c2, criterios_activos[i].campo);
+        if (criterios_activos[i].descendente) {
+            r = -r;
+        }
+        if (r != 0) {
+            return r;
+        }
+    }
     return strcmp(c1->nombre, c2->nombre);
 }
 
@@ -80,9 +114,6 @@ void swap(Curso *a, Curso *b){
     *b = temp;
 }
 
-
-//MAIN 
-
 int main(int argc, char *argv[]) {
     const char *ruta_archivo = (argc > 1) ? argv[1] : "cursos.txt";
 
@@ -125,24 +156,6 @@ int main(int argc, char *argv[]) {
     quicksort(copia_qs_nombre, n, comparar_nombre);
     imprimir_cursos(copia_qs_nombre, n, "Ordenado con Quicksort (por Nombre)", cursos);
     liberar_arreglo_cursos(copia_qs_nombre, n);
-
-    // Prueba Quicksort por restricciones (prerrequisitos) y semestre sugerido
-    if (calcular_niveles(cursos, n) == 0) {
-        Curso *copia_restricciones = copiar_arreglo_cursos(cursos, n);
-        quicksort(copia_restricciones, n, comparar_restricciones);
-        imprimir_cursos(copia_restricciones, n, "Ordenado con Quicksort (por Restricciones)", cursos);
-        liberar_arreglo_cursos(copia_restricciones, n);
-
-        int *plan = (int *)malloc(n * sizeof(int));
-        int semestres = semestre_sugerido(cursos, n, MAX_CREDITOS_SEMESTRE,
-                                          MAX_DIFICULTAD_SEMESTRE, plan);
-        if (semestres > 0) {
-            imprimir_plan(cursos, n, plan, semestres);
-        }
-        free(plan);
-    } else {
-        printf("\nHay un ciclo en los prerrequisitos: no se puede ordenar por restricciones.\n");
-    }
 
     // Liberar memoria original
     liberar_arreglo_cursos(cursos, n);
