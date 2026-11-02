@@ -1583,6 +1583,7 @@ crear_boton_menu("Materias elegibles", mostrar_elegibles)
 crear_boton_menu("Carga academica", mostrar_carga)
 crear_boton_menu("Planeacion", mostrar_planeacion)
 crear_boton_menu("Reportes", mostrar_reportes)
+crear_boton_menu("Ordenar materias", mostrar_ordenamiento)
 
 tk.Label(
     menu_lateral,

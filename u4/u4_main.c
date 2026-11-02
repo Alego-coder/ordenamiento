@@ -11,7 +11,7 @@ static void uso(const char *prog) {
     printf("Uso: %s <cursos.txt> [opciones]\n"
            "  -a LISTA   materias aprobadas por indice base 0, ej. 0,1,5-9\n"
            "  -s N       dar por aprobadas todas las materias hasta el semestre N del plan\n"
-           "  -c N       tope de creditos por semestre (default 40, 0 = sin tope)\n"
+           "  -c N       tope de creditos por semestre (default 50, 0 = sin tope)\n"
            "  -m N       tope de materias por semestre (default sin tope)\n"
            "  -n N       limite de pasos del backtracking (default 20000000)\n"
            "  -t         imprimir el orden topologico completo\n"
@@ -21,7 +21,7 @@ static void uso(const char *prog) {
 int main(int argc, char *argv[]) {
     const char *ruta = "../quicksort/cursos.txt";
     const char *hist = NULL;
-    int sem_aprob = -1, max_cred = 40, max_mat = 0, ver_topo = 0, sin_plan = 0;
+    int sem_aprob = -1, max_cred = 50, max_mat = 0, ver_topo = 0, sin_plan = 0;
     long long limite = 20000000LL;
 
     for (int i = 1; i < argc; i++) {
