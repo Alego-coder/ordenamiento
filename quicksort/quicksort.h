@@ -7,6 +7,34 @@
 #include "curso.h"
 #include "leerArchivo.h"
 
+// Campos por los que se puede ordenar
+typedef enum {
+    CRIT_CREDITOS,
+    CRIT_DIFICULTAD,
+    CRIT_SEMESTRE,
+    CRIT_NOMBRE
+} CampoCriterio;
+
+// Un criterio de ordenamiento: campo y sentido (1 = de mayor a menor)
+typedef struct {
+    CampoCriterio campo;
+    int descendente;
+} Criterio;
+
+#define MAX_CRITERIOS 4
+
+// Comparadores simples
+int comparar_dificultad(const void *a, const void *b);
+int comparar_semestre(const void *a, const void *b);
+int comparar_creditos(const void *a, const void *b);
+int comparar_nombre(const void *a, const void *b);
+
+// Comparador por varios criterios: primero se configuran con
+// configurar_criterios() y luego se pasa comparar_compuesto a quicksort().
+// Los empates se resuelven por nombre.
+void configurar_criterios(const Criterio *criterios, int n);
+int comparar_compuesto(const void *a, const void *b);
+
 // Declaración de funciones
 void quicksort(Curso *arreglo, int n, int (*comparador)(const void *, const void *));
 void quicksort_rec(Curso *arreglo, int inicio, int fin,int (*comparador)(const void *, const void *));
