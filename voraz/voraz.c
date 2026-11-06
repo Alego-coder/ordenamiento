@@ -1,4 +1,5 @@
 #include "voraz.h"
+#include "quicksort.h"
 
 static int prereq_valido(int i, int p, int n) {
     return p >= 0 && p < n && p != i;
@@ -135,6 +136,18 @@ static int prioridad(const Curso *cursos, const MetricasVoraz *m,
     return b - a;   // menor indice primero
 }
 
+typedef struct {
+    const Curso *cursos;
+    const MetricasVoraz *m;
+    CriterioVoraz criterio;
+} CtxPrioridad;
+
+// Adaptador para quicksort_indices: mayor prioridad = va primero.
+static int comparar_prioridad(int a, int b, const void *ctx) {
+    const CtxPrioridad *x = (const CtxPrioridad *)ctx;
+    return -prioridad(x->cursos, x->m, x->criterio, a, b);
+}
+
 int seleccion_voraz(const Curso *cursos, int n, int max_creditos,
                     int max_materias, CriterioVoraz criterio, int *asignacion) {
     if (n <= 0) {
@@ -177,16 +190,9 @@ int seleccion_voraz(const Curso *cursos, int n, int max_creditos,
             }
         }
 
-        // 2) Ordenar por prioridad (insercion: n es pequeno y es estable)
-        for (int a = 1; a < ne; a++) {
-            int x = elegibles[a];
-            int b = a - 1;
-            while (b >= 0 && prioridad(cursos, &m, criterio, x, elegibles[b]) > 0) {
-                elegibles[b + 1] = elegibles[b];
-                b--;
-            }
-            elegibles[b + 1] = x;
-        }
+        // 2) Ordenar por prioridad con quicksort 
+        CtxPrioridad ctx = { cursos, &m, criterio };
+        quicksort_indices(elegibles, ne, comparar_prioridad, &ctx);
 
         // 3) Tomar en orden mientras quepan. Si una no cabe, se prueba con
         //    la siguiente (la que no cabe espera al siguiente semestre).

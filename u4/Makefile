@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -std=c11 -g
 INCLUDES = -I../curso -I../leer_Archivo -I../quicksort -I../voraz
-OBJS = u4_main.o validacion.o elegibles.o backtracking.o voraz.o curso.o leerArchivo.o
+OBJS = u4_main.o validacion.o elegibles.o backtracking.o voraz.o quicksort.o curso.o leerArchivo.o
 BIN = u4
 
 .PHONY: all clean run
@@ -20,11 +20,14 @@ validacion.o: validacion.c validacion.h ../curso/curso.h
 elegibles.o: elegibles.c elegibles.h ../curso/curso.h
 	$(CC) $(CFLAGS) $(INCLUDES) -c elegibles.c
 
-backtracking.o: backtracking.c backtracking.h ../voraz/voraz.h
+backtracking.o: backtracking.c backtracking.h ../voraz/voraz.h ../quicksort/quicksort.h
 	$(CC) $(CFLAGS) $(INCLUDES) -c backtracking.c
 
-voraz.o: ../voraz/voraz.c ../voraz/voraz.h ../curso/curso.h
+voraz.o: ../voraz/voraz.c ../voraz/voraz.h ../curso/curso.h ../quicksort/quicksort.h
 	$(CC) $(CFLAGS) $(INCLUDES) -c ../voraz/voraz.c
+
+quicksort.o: ../quicksort/quicksort.c ../quicksort/quicksort.h ../curso/curso.h
+	$(CC) $(CFLAGS) $(INCLUDES) -c ../quicksort/quicksort.c
 
 leerArchivo.o: ../leer_Archivo/leerArchivo.c ../leer_Archivo/leerArchivo.h ../curso/curso.h
 	$(CC) $(CFLAGS) $(INCLUDES) -c ../leer_Archivo/leerArchivo.c

@@ -1,22 +1,10 @@
-// Demo del modulo U4: validacion de la malla, elegibles y planeacion por backtracking.
-// Uso: ./u4 <cursos.txt> [-a 0,1,5-9 | -s semestre] [-c max_creditos] [-m max_materias]
-//                         [-n limite_pasos] [-t] [--sin-plan]
+               [-n limite_pasos] [-t] [--sin-plan]
 #include "validacion.h"
 #include "elegibles.h"
 #include "backtracking.h"
 #include "leerArchivo.h"
 #include <time.h>
 
-static void uso(const char *prog) {
-    printf("Uso: %s <cursos.txt> [opciones]\n"
-           "  -a LISTA   materias aprobadas por indice base 0, ej. 0,1,5-9\n"
-           "  -s N       dar por aprobadas todas las materias hasta el semestre N del plan\n"
-           "  -c N       tope de creditos por semestre (default 50, 0 = sin tope)\n"
-           "  -m N       tope de materias por semestre (default sin tope)\n"
-           "  -n N       limite de pasos del backtracking (default 20000000)\n"
-           "  -t         imprimir el orden topologico completo\n"
-           "  --sin-plan solo validar y calcular elegibles\n", prog);
-}
 
 int main(int argc, char *argv[]) {
     const char *ruta = "../quicksort/cursos.txt";
@@ -24,18 +12,7 @@ int main(int argc, char *argv[]) {
     int sem_aprob = -1, max_cred = 50, max_mat = 0, ver_topo = 0, sin_plan = 0;
     long long limite = 20000000LL;
 
-    for (int i = 1; i < argc; i++) {
-        if (strcmp(argv[i], "-a") == 0 && i + 1 < argc) hist = argv[++i];
-        else if (strcmp(argv[i], "-s") == 0 && i + 1 < argc) sem_aprob = atoi(argv[++i]);
-        else if (strcmp(argv[i], "-c") == 0 && i + 1 < argc) max_cred = atoi(argv[++i]);
-        else if (strcmp(argv[i], "-m") == 0 && i + 1 < argc) max_mat = atoi(argv[++i]);
-        else if (strcmp(argv[i], "-n") == 0 && i + 1 < argc) limite = atoll(argv[++i]);
-        else if (strcmp(argv[i], "-t") == 0) ver_topo = 1;
-        else if (strcmp(argv[i], "--sin-plan") == 0) sin_plan = 1;
-        else if (argv[i][0] == '-') { uso(argv[0]); return 1; }
-        else ruta = argv[i];
-    }
-
+    
     int n = 0;
     Curso *cursos = leer_cursos_archivo(ruta, &n);
     if (cursos == NULL || n == 0) {
@@ -98,7 +75,6 @@ int main(int argc, char *argv[]) {
     }
     free(elegibles);
 
-    // ---------- 3) Backtracking ----------
     if (!sin_plan) {
         printf("\n== 3) Planeacion por backtracking (tope: %d creditos, %d materias por semestre) ==\n",
                max_cred, max_mat);

@@ -3,14 +3,12 @@
 
 #include "curso.h"
 
-// Modulo de validacion de la malla (U4).
 //
 // El grafo se recorre con DFS de tres colores (0 = sin visitar, 1 = en la
 // pila de recursion, 2 = terminado). Si el DFS encuentra una arista hacia un
 // nodo que sigue "en la pila" (arista de retorno), esa pila ES la evidencia
 // del ciclo: la secuencia de materias A -> B -> ... -> A.
 //
-// Complejidad: O(V + E) en tiempo y O(V) en espacio.
 
 #define MAX_CICLOS 16
 #define MAX_LONG_CICLO 128
@@ -37,4 +35,4 @@ void imprimir_ciclo(const Curso *cursos, const Ciclo *ciclo);
 // Devuelve 0 si todo bien, -1 si hay ciclo. No es unico: es UN orden valido.
 int orden_topologico(const Curso *cursos, int n, int *orden);
 
-#endif // VALIDACION_H
+#endif 

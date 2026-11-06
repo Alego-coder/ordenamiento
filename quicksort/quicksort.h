@@ -42,4 +42,9 @@ void quicksort_rec(Curso *arreglo, int inicio, int fin,int (*comparador)(const v
 int particion(Curso *arreglo, int bajo, int alto, int (*comparador)(const void *, const void *));
 void swap(Curso *a, Curso *b);
 
-#endif // QUICKSORT_H
+// Quicksort sobre un arreglo de indices. cmp(a, b, ctx) devuelve < 0 si el
+// indice a debe ir antes que b, 0 si empatan y > 0 si va despues.
+typedef int (*ComparadorIdx)(int a, int b, const void *ctx);
+void quicksort_indices(int *idx, int n, ComparadorIdx cmp, const void *ctx);
+
+#endif 

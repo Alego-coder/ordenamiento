@@ -68,7 +68,7 @@ int materias_elegibles(const Curso *cursos, int n, const char *aprobadas, int *s
         for (int j = 0; j < cursos[i].num_prerequisitos && libre; j++) {
             int p = cursos[i].prerequisitos[j];
             if (p < 0 || p >= n) {
-                continue;   // indice invalido: se ignora (lo reporta validar_indices)
+                continue;   // indice invalido
             }
             if (p == i || !aprobadas[p]) {
                 libre = 0;

@@ -2,9 +2,8 @@
 REM Compila el puente entre la interfaz de Python y los modulos en C.
 REM Genera cursos.dll junto a main.py (requiere gcc de MinGW en el PATH).
 REM
-REM quicksort.c tiene su propio main() de pruebas: se renombra con -Dmain=...
-REM para que no choque dentro de la biblioteca. Tampoco se modifica ningun
-REM archivo existente.
+REM El main() de pruebas del quicksort esta en quicksort\quicksort_main.c
+REM y no se incluye en la biblioteca.
 
 setlocal
 set INC=-I. -I..\curso -I..\leer_Archivo -I..\quicksort -I..\restricciones -I..\semestre_sugerido -I..\voraz -I..\u4
@@ -19,7 +18,7 @@ gcc -shared -static -O2 -Wall -Wextra -std=c11 %INC% -o cursos.dll ^
   ..\u4\validacion.c ^
   ..\u4\elegibles.c ^
   ..\u4\backtracking.c ^
-  -Dmain=quicksort_demo_main ..\quicksort\quicksort.c
+  ..\quicksort\quicksort.c
 
 if errorlevel 1 (
     echo ERROR al compilar cursos.dll

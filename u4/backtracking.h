@@ -11,25 +11,7 @@
 // agregar otra elegible sin pasarse del tope). Con cada subconjunto se
 // avanza al semestre siguiente; si no hay salida, se regresa (backtrack).
 //
-// Es una busqueda exhaustiva con poda, pensada para INSTANCIAS REDUCIDAS
-// (pocas materias restantes): el numero de planes crece exponencialmente.
-//
-// Que se afirma y que no:
-//   - Todo plan devuelto es FACTIBLE (respeta prerrequisitos y topes).
-//   - Solo si la busqueda termina SIN llegar al limite de pasos
-//     (optimo_demostrado = 1) el numero de semestres es el MINIMO de esta
-//     instancia bajo este modelo. Si se corta por limite, es solo "el mejor
-//     plan encontrado" y NO se debe llamar ruta minima.
-//   - La poda es correcta (no pierde el optimo):
-//       * Solo se consideran semestres maximales: cualquier plan se puede
-//         reordenar adelantando materias elegibles sin empeorarlo.
-//       * Cota inferior de semestres restantes = max(cadena de prerrequisitos
-//         mas larga que falta, ceil(materias/max_materias),
-//         ceil(creditos/max_creditos)).
-//       * Si un mismo conjunto de aprobadas ya se alcanzo en un semestre
-//         anterior o igual, no se vuelve a explorar.
-//   - El orden en que se prueban las ramas usa una heuristica (materias que
-//     desbloquean), pero solo afecta la VELOCIDAD, no la correccion.
+
 
 typedef struct {
     int encontrado;               // 1 si hay al menos un plan

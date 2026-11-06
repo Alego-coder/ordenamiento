@@ -281,14 +281,11 @@ static Curso *crear_restantes(const char *aprobadas, int *m, int **mapa_out) {
     return sub;
 }
 
-/* ------------------------------------------------------------------ */
-/* Seleccion voraz                                                     */
-/* ------------------------------------------------------------------ */
 
 /*
- * criterio: 0 = desbloquea (recomendado), 1 = solo creditos.
- * asignacion[i] = semestre (1, 2, ...) de la materia i, o 0 si ya estaba
- * aprobada. Devuelve semestres usados, o -1 si hay ciclo / falla memoria.
+criterio: 0 = desbloquea (recomendado), 1 = solo creditos.
+asignacion[i] = semestre (1, 2, ...) de la materia i, o 0 si ya estaba
+aprobada. Devuelve semestres usados, o -1 si hay ciclo / falla memoria.
  */
 EXPORT int plan_voraz(int criterio, int max_creditos, int max_materias,
                       const char *aprobadas, int *asignacion) {
@@ -331,20 +328,18 @@ EXPORT int plan_voraz(int criterio, int max_creditos, int max_materias,
     return semestres;
 }
 
-/* ------------------------------------------------------------------ */
-/* Backtracking                                                        */
-/* ------------------------------------------------------------------ */
+
 
 /*
- * Devuelve el codigo de plan_backtracking: 0 = hay plan, 1 = no se hallo plan
- * dentro del limite, -1 = ciclo o memoria, -2 = mas de 64 materias.
- *   asignacion[i] = semestre (1..) o 0 si ya estaba aprobada
- *   pasos[0]      = nodos de busqueda visitados
- *   info[0] = semestres del mejor plan
- *   info[1] = 1 si se corto por limite de pasos
- *   info[2] = 1 si el minimo quedo demostrado
- *   info[3] = semestres del primer plan hallado
- */
+Devuelve el codigo de plan_backtracking: 0 = hay plan, 1 = no se hallo plan
+dentro del limite, -1 = ciclo o memoria, -2 = mas de 64 materias.
+asignacion[i] = semestre (1..) o 0 si ya estaba aprobada
+pasos[0]      = nodos de busqueda visitados
+info[0] = semestres del mejor plan
+info[1] = 1 si se corto por limite de pasos
+info[2] = 1 si el minimo quedo demostrado
+info[3] = semestres del primer plan hallado
+*/
 EXPORT int plan_bt(const char *aprobadas, int max_creditos, int max_materias,
                    long long limite_pasos, int *asignacion, long long *pasos,
                    int *info) {

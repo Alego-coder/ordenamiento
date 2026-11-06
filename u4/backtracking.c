@@ -1,5 +1,6 @@
 #include "backtracking.h"
 #include "voraz.h"
+#include "quicksort.h"
 #include <limits.h>
 
 #define BITS_MEMO 19
@@ -42,6 +43,11 @@ static int mejor(const Ctx *x, int a, int b) {
     if (x->m.ruta_critica[a] != x->m.ruta_critica[b]) return x->m.ruta_critica[a] - x->m.ruta_critica[b];
     if (x->c[a].creditos != x->c[b].creditos) return x->c[a].creditos - x->c[b].creditos;
     return b - a;
+}
+
+// Adaptador para quicksort_indices: la rama "mejor" se prueba primero
+static int comparar_ramas(int a, int b, const void *ctx) {
+    return -mejor((const Ctx *)ctx, a, b);
 }
 
 // Cota inferior de semestres que aun faltan (nunca sobreestima)
@@ -135,12 +141,8 @@ static void semestre_rec(Ctx *x, u64 mask, int sem) {
             E[ne++] = i;
         }
     }
-    // Ordenar ramas: insercion (ne es pequeno)
-    for (int a = 1; a < ne; a++) {
-        int v = E[a], b = a - 1;
-        while (b >= 0 && mejor(x, v, E[b]) > 0) { E[b + 1] = E[b]; b--; }
-        E[b + 1] = v;
-    }
+    // Ordenar ramas con quicksort (modulo U2): solo afecta la velocidad
+    quicksort_indices(E, ne, comparar_ramas, x);
     if (ne > 0) {
         elegir_rec(x, E, ne, 0, mask, sem, 0ULL, 0, 0);
     }

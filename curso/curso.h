@@ -21,4 +21,4 @@ void liberar_curso(Curso *curso);
 void imprimir_cursos(Curso *cursos, int n, const char *titulo, Curso *original);
 void liberar_arreglo_cursos(Curso *cursos, int n);
 Curso* copiar_arreglo_cursos(Curso *original, int n);
-#endif // CURSO_H
+#endif 
